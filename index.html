@@ -1,0 +1,36 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                    <h1 class="display-4">Word Guess Game</h1>
+                    <p class="lead">Guess the word one letter at a time using your keyboard. If you guess the word correctly, you win that round. You get 5 chances to get the word correct.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <p id="word"></p>
+                <p id="incorrect-letters"></p>
+                <p id="all-letters-guessed"></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <h4>Wins: <span id="wins"></span></h4>
+            </div>
+            <div class="col-6">
+                <h4>Losses: <span id="losses"></span></h4>
+            </div>
+        </div>
+    </div>
+    <script src="assets/javascript/game.js"></script>
+</body>
+</html>
