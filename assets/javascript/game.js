@@ -68,6 +68,7 @@ function startGame(){
         underscore.innerHTML = "_ ";
         //give the underscore a class name
         underscore.classList.add("underscore");
+        underscore.setAttribute("id",[i]);
         //set the display to inline so tht the underscores display side by side
         underscore.style.display = "inline";
         //set the attribute to data-letter and the data letter should correspond with the letter currently going through the loop
@@ -78,24 +79,36 @@ function startGame(){
     };
 
 };
+
+//a function created which will send an alert anytime it's called if someone guesses an already guessed letter. 
 function sendAlert(){
     alert("you've already guessed that letter!");
 };
 
-
+//function that takes in the users guess and determines if it's a correct letter or not
 function guessLetter(letter){
+    //gets all of the elements with the underscore class name - so all of the underscores and puts them in a variable
     let underscoreArray = document.getElementsByClassName("underscore");
+    //empty array which will be used to put the data-attributes into an actual array
     let underscoreToLetterArray = [];
+    //empty variables
     let newGuessLetter;
     let newWrongLetter;
     
+    //for loop that goes through the underscores and gets their data-letter and then buts that letter into the empty array above
     for(let i = 0; i < underscoreArray.length;i++){
         underscoreLetter = underscoreArray[i].getAttribute("data-letter",[i]);
         underscoreToLetterArray.push(underscoreLetter);
     };
+    //as long as user has 
     if(guesses !== 1){
         if(underscoreToLetterArray.includes(letter)){
             if(allLetters.includes(letter) === false){
+                for(let i = 0; i < underscoreArray.length; i++){
+                    if(letter === underscoreArray[i].getAttribute("data-letter",[i])){
+                        document.getElementById([i]).innerHTML = letter;
+                    };
+                };
                 allLettersGuessed.innerText = "";
                 allLetters.push(letter)
                 for(let i = 0; i < allLetters.length; i++){
@@ -132,6 +145,8 @@ function guessLetter(letter){
             
         };
     }else{
+        guesses--
+        guessesLeft.innerText = guesses;
         alert("No more guesses left!");
         loss++;
         losses.innerText = loss;
