@@ -8,6 +8,7 @@ const allLetters = []; //empty array that holds all the letters guessed
 const incorrect = []; //empty array that holds all the incorrect letters
 let guesses = 5;
 let splitLetters;
+let characterCount;
 
 //all the variables to manipulate the DOM
 const word = document.getElementById("word"); //this is where the character/underscores will go
@@ -50,6 +51,8 @@ function startGame(){
 
     //get the current character by using the random index
     currentCharacter = characterArray[randomIndex].name;
+    characterCount= currentCharacter.length;
+    console.log(characterCount);
 
     //come back to this - this allows for the current character to be removed from the array
     // console.log(currentCharacter);
@@ -101,7 +104,7 @@ function guessLetter(letter){
         underscoreToLetterArray.push(underscoreLetter);
     };
     //as long as user has 
-    if(guesses !== 1){
+    if(guesses > 0 && characterCount > 0){
         if(underscoreToLetterArray.includes(letter)){
             if(allLetters.includes(letter) === false){
                 for(let i = 0; i < underscoreArray.length; i++){
@@ -111,6 +114,7 @@ function guessLetter(letter){
                 };
                 allLettersGuessed.innerText = "";
                 allLetters.push(letter)
+                characterCount--;
                 for(let i = 0; i < allLetters.length; i++){
                     newGuessLetter = document.createElement("span");
                     newGuessLetter.innerText = allLetters[i] + " ";
@@ -144,6 +148,9 @@ function guessLetter(letter){
             };
             
         };
+    }else if(characterCount === 0){
+        characterCount--;
+        alert("you win!");
     }else{
         guesses--
         guessesLeft.innerText = guesses;
