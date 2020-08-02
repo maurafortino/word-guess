@@ -10,7 +10,8 @@ let guesses = 5;
 let splitLetters;
 let characterCount;
 let underscoreToLetterArray = [];
-
+let characterGuessed = false;
+let failedToGuessCharacter = false;
 //all the variables to manipulate the DOM
 const word = document.getElementById("word"); //this is where the character/underscores will go
 const wins = document.getElementById("wins"); //this is where the wins will go
@@ -64,36 +65,40 @@ function startGame(){
 
 };
 
+function updatePage(letter){
+
+    if(characterGuessed){
+        win++;
+        wins.innerText = wins;
+        nextRound();
+        splitCharacter();
+    } else if(failedToGuessCharacter){
+        loss++;
+        losses.innerText = loss;
+        nextRound();
+        splitCharacter();
+    } else {
+        guessLetter(letter);
+    }
+
+};
+
+
 function splitCharacter(){
-        //split the character into separate letters
         splitLetters = currentCharacter.split("");
-        console.log(splitLetters);
-        //loop over the letters from the character split:
+
         for(let i = 0; i < splitLetters.length; i++){
-            //creates a new div for each letter 
             let underscore = document.createElement("div");
-            //inside each div is an underscore and a space - one underscore for each letter in the character split
             underscore.innerHTML = "_ ";
-            //give the underscore a class name
             underscore.classList.add("underscore");
             underscore.setAttribute("id",[i]);
-            //set the display to inline so tht the underscores display side by side
             underscore.style.display = "inline";
-            //set the attribute to data-letter and the data letter should correspond with the letter currently going through the loop
-            //this will be used later one to determine if the letter guessed is equal to a letter in the word
             underscore.setAttribute("data-letter", splitLetters[i]);
-            //appends the newly created underscore to the current word paragraph
             word.append(underscore);
         };
 };
 
 function guessLetter(letter){
-
-    if(guessesLeft > 0 && characterCount === 0){
-        win++;
-        wins.innerText = wins;
-        nextRound();
-    } else {
 
         for(let i = 0; i < underscoreArray.length;i++){
             underscoreLetter = underscoreArray[i].getAttribute("data-letter",[i]);
@@ -101,13 +106,7 @@ function guessLetter(letter){
         };
 
         checkIfCorrectLetter(letter);
-    }
-    //as long as user has 
-    if(guesses === 0 && characterCount > 0){
-        loss++;
-        losses.innerText = loss;
-        nextRound();
-    };
+
 };
 
 function checkIfCorrectLetter(letter){
@@ -123,16 +122,19 @@ function checkIfCorrectLetter(letter){
         allLettersGuessed.innerText = "";
         allLetters.push(letter)
         characterCount--;
+        if(characterCount === 0){
+            characterGuessed = true;
+        }
 
         for(let i = 0; i < allLetters.length; i++){
             newGuessLetter = document.createElement("span");
             newGuessLetter.innerText = allLetters[i] + " ";
             allLettersGuessed.appendChild(newGuessLetter);
         };
+
     }else{
 
         checkIfIncorrectLetter(letter);
-
     }
 };
 
@@ -140,6 +142,7 @@ function checkIfIncorrectLetter(letter){
     let newWrongLetter;
     guesses--;
     guessesLeft.innerText = guesses;
+
     allLettersGuessed.innerText = "";
     incorrectLetters.innerText = "";
     allLetters.push(letter);
@@ -157,7 +160,10 @@ function checkIfIncorrectLetter(letter){
         newWrongLetter.style.color = "red";
         incorrectLetters.appendChild(newWrongLetter);
     };
-  
+
+    if(guesses === 0){
+        failedToGuessCharacter = true;
+    }
 };
 
 function nextRound(){
@@ -166,8 +172,6 @@ function nextRound(){
     randomIndex= Math.floor(Math.random() * characterArray.length);
     currentCharacter = characterArray[randomIndex].name;
     characterArray.splice(randomIndex,1);
-
-    splitCharacter();
 }
 
 function clearGame(){
@@ -183,11 +187,11 @@ function clearGame(){
     currentCharacter = "";
 };
 
-document.onkeyup = function keyPressed(event){
+document.onkeyup = function (event){
 
-    if(event.keyCode >= 65 && event.keyCode<= 90){
-        userGuess = String.fromCharCode(event.keyCode).toLowerCase();
-        guessLetter(userGuess);
+    if(event.keyCode >= 49 && event.keyCode<= 90){
+        userGuess = event.key.toLowerCase();
+        updatePage(userGuess);
     }else{
         alert("hey you need to press a letter!");
     };
