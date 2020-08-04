@@ -12,6 +12,8 @@ let characterCount;
 let underscoreToLetterArray = [];
 let characterGuessed = false;
 let failedToGuessCharacter = false;
+let randomIndex;
+
 //all the variables to manipulate the DOM
 const word = document.getElementById("word"); //this is where the character/underscores will go
 const wins = document.getElementById("wins"); //this is where the wins will go
@@ -20,7 +22,6 @@ const allLettersGuessed = document.getElementById("all-letters-guessed"); //this
 const incorrectLetters = document.getElementById("incorrect-letters"); // this is where only the incorrect guesses will go. 
 const guessesLeft = document.getElementById("guesses-left"); //this is where the user will see how many guesses they have left. 
 const underscoreArray = document.getElementsByClassName("underscore");
-let randomIndex;
 
 const characterArray = [
     {
@@ -45,8 +46,16 @@ const characterArray = [
     }
 ];
 
+let roundsPlayed = characterArray.length;
+
 function startGame(){
 
+    assignCharacter();
+    splitCharacter();
+
+};
+
+function assignCharacter(){
     randomIndex= Math.floor(Math.random() * characterArray.length);
     guessesLeft.innerText = guesses;
     wins.innerText = win;
@@ -54,29 +63,34 @@ function startGame(){
 
     currentCharacter = characterArray[randomIndex].name;
     characterCount= currentCharacter.length;
-    console.log(characterCount);
+    removeCharacter();
+};
 
-    splitCharacter();
-    //come back to this - this allows for the current character to be removed from the array
-    console.log(currentCharacter);
+
+function removeCharacter(){
     characterArray.splice(randomIndex,1);
-    console.log(characterArray);
-
-
+    for(let i = 0; i < characterArray.length; i ++){
+        console.log(characterArray[i] + ". " + characterArray[i].name);
+    };
 };
 
 function updatePage(letter){
 
     if(characterGuessed){
         win++;
-        wins.innerText = wins;
+        wins.innerText = win;
+        roundsPlayed--;
         nextRound();
         splitCharacter();
+        console.log(characterCount + currentCharacter);
     } else if(failedToGuessCharacter){
         loss++;
         losses.innerText = loss;
+        roundsPlayed--;
         nextRound();
         splitCharacter();
+    } else if(roundsPlayed === 0){
+        gameOver();
     } else {
         guessLetter(letter);
     }
@@ -167,14 +181,11 @@ function checkIfIncorrectLetter(letter){
 };
 
 function nextRound(){
-    clearGame();
-
-    randomIndex= Math.floor(Math.random() * characterArray.length);
-    currentCharacter = characterArray[randomIndex].name;
-    characterArray.splice(randomIndex,1);
+    resetGame();
+    assignCharacter();
 }
 
-function clearGame(){
+function resetGame(){
     word.innerText = "";
     allLettersGuessed.innerText = "";
     incorrectLetters.innerText = "";
@@ -185,6 +196,15 @@ function clearGame(){
     allLetters = [];
     incorrect =[];
     currentCharacter = "";
+    characterGuessed = false;
+    failedToGuessCharacter = false;
+
+};
+
+function gameOver(){
+    if(confirm("Game over! Your score was: " + win + ". Do you want to play again?")){
+            startGame();
+        };
 };
 
 document.onkeyup = function (event){
