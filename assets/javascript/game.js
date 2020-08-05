@@ -49,7 +49,6 @@ const characterArray = [
 let roundsPlayed = characterArray.length;
 
 function startGame(){
-
     assignCharacter();
     splitCharacter();
 
@@ -90,7 +89,7 @@ function updatePage(letter){
         nextRound();
         splitCharacter();
     } else if(roundsPlayed === 0){
-        gameOver();
+        word.innerText = "Game Over. You won " + win + " games!";
     } else {
         guessLetter(letter);
     }
@@ -201,11 +200,6 @@ function resetGame(){
 
 };
 
-function gameOver(){
-    if(confirm("Game over! Your score was: " + win + ". Do you want to play again?")){
-            startGame();
-        };
-};
 
 document.onkeyup = function (event){
 
